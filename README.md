@@ -1,18 +1,65 @@
 # FDRZ - Workflow Management Platform
 
-A React-based workflow management system with Microsoft Azure AD authentication.
+A React-based workflow management system integrated with FDRW (Financial Data Report Writer) authentication.
 
 ## Overview
 
-FDRZ is a comprehensive workflow management platform that provides secure authentication via Microsoft Azure AD and a modern React frontend for managing workflows and user data.
+FDRZ is a comprehensive workflow management platform that uses Microsoft Azure AD authentication and integrates with the FDRW backend API for secure user authentication and data access.
+
+## FDRW Integration
+
+This application has been integrated with the Financial Report Writer (FDRW) authentication system:
+
+- **Frontend Authentication**: Uses Microsoft MSAL (Microsoft Authentication Library) for browser-based Microsoft Graph authentication
+- **Backend Integration**: Sends Microsoft Graph tokens to FDRW backend API for session token generation
+- **API Base URL**: `https://hkg.efadrin.biz:8453/efadrin/v3.0/fdrw-api/api`
+- **Authentication Endpoint**: `/auth/login` (expects Microsoft Graph token)
+
+## Setup Instructions
+
+### 1. Environment Variables
+
+Create a `.env` file in the project root (use `.env.example` as a template):
+
+```env
+# FDRW Backend API URL
+REACT_APP_API_URL=https://hkg.efadrin.biz:8453/efadrin/v3.0/fdrw-api/api
+
+# Azure AD Configuration (required for MSAL authentication)
+REACT_APP_AZURE_CLIENT_ID=your-azure-app-client-id
+REACT_APP_AZURE_AUTHORITY=https://login.microsoftonline.com/your-tenant-id
+REACT_APP_AZURE_REDIRECT_URI=http://localhost:3000
+```
+
+### 2. Azure AD App Registration
+
+Make sure your Azure AD app registration is configured with:
+
+- **Platform**: Single Page Application (SPA)
+- **Redirect URIs**: Include your application URL (e.g., `http://localhost:3000`)
+- **API Permissions**: Include Microsoft Graph permissions for user profile access
+- **Client ID**: Add to your `.env` file as `REACT_APP_AZURE_CLIENT_ID`
+
+### 3. Install Dependencies
+
+```bash
+npm install
+```
+
+### 4. Start Development Server
+
+```bash
+npm start
+```
 
 ## Authentication Flow
 
 ### Login Process
 
-The application uses Microsoft Azure AD for authentication with the following flow:
+The application uses the same authentication flow as FDRW:
 
 #### 1. Initial State Check
+
 - When the `LoginPage` loads, it automatically checks if the user is already authenticated
 - If `isAuthenticated` is `true`, redirects automatically to `/dashboard`
 - Authentication state is managed via Redux store
@@ -20,11 +67,13 @@ The application uses Microsoft Azure AD for authentication with the following fl
 #### 2. Login Options
 
 **Primary Login (New Users):**
+
 - User clicks "Sign in with Microsoft" button
 - Triggers Microsoft popup authentication via MSAL
 - Requires user interaction and consent
 
 **Silent Login (Returning Users):**
+
 - Available only if previous Microsoft accounts are found (`accounts.length > 0`)
 - User can click "Continue with saved account"
 - Attempts silent token acquisition without popup
@@ -36,7 +85,7 @@ The application uses Microsoft Azure AD for authentication with the following fl
 const login = async () => {
   // Step 1: Microsoft popup authentication
   const loginResponse = await instance.loginPopup(loginRequest);
-  
+
   // Step 2: Send Microsoft token to backend
   const result = await microsoftLogin({
     email: loginResponse.account.username,
@@ -44,7 +93,7 @@ const login = async () => {
     microsoftId: loginResponse.account.homeAccountId,
     accessToken: loginResponse.accessToken,
   });
-  
+
   // Step 3: Update Redux state with user info and JWT token
   dispatch(setUser(result.user));
   dispatch(setToken(result.token));
@@ -85,12 +134,15 @@ Routes are protected using the `ProtectedRoute` component:
 
 ```typescript
 const ProtectedRoute = ({ children, requiredRole }) => {
-  const { isAuthenticated, isLoading, user } = useAppSelector((state) => state.auth);
-  
+  const { isAuthenticated, isLoading, user } = useAppSelector(
+    (state) => state.auth
+  );
+
   if (isLoading) return <LoadingSpinner />;
   if (!isAuthenticated) return <Navigate to="/login" />;
-  if (requiredRole && user?.role !== requiredRole) return <Navigate to="/unauthorized" />;
-  
+  if (requiredRole && user?.role !== requiredRole)
+    return <Navigate to="/unauthorized" />;
+
   return children;
 };
 ```
@@ -98,6 +150,7 @@ const ProtectedRoute = ({ children, requiredRole }) => {
 ## Required Checks for Successful Login
 
 ### Frontend Requirements:
+
 1. ✅ **Microsoft Authentication:** Valid response from MSAL popup
 2. ✅ **Backend API Success:** `/auth/microsoft` endpoint responds successfully
 3. ✅ **Valid Response Data:** Backend returns proper `{ user, token }` structure
@@ -105,6 +158,7 @@ const ProtectedRoute = ({ children, requiredRole }) => {
 5. ✅ **Automatic Navigation:** Redirect to `/dashboard` on success
 
 ### Backend Requirements:
+
 1. **Microsoft Token Validation:** Verify the provided `accessToken` with Microsoft Graph API
 2. **User Management:** Find existing user or create new user in database
 3. **JWT Generation:** Create application-specific JWT token
@@ -144,6 +198,7 @@ src/
 ## API Endpoints
 
 ### Authentication API (`authApi.ts`)
+
 - `POST /auth/login` - Standard login (not currently used)
 - `POST /auth/microsoft` - Microsoft OAuth login
 - `POST /auth/logout` - User logout
@@ -151,11 +206,13 @@ src/
 - `POST /auth/refresh` - Refresh JWT token
 
 ### User API (`userApi.ts`)
+
 - `GET /api/users/me` - Get current user profile
 - `PATCH /api/users/me` - Update user profile
 - `GET /api/users` - Get all users (admin only)
 
 ### Workflow API (`workflowApi.ts`)
+
 - Workflow management endpoints (implementation depends on your backend)
 
 ## Environment Configuration
@@ -175,15 +232,18 @@ REACT_APP_API_URL=http://localhost:5000
 ## Getting Started
 
 1. **Install Dependencies:**
+
    ```bash
    npm install
    ```
 
 2. **Configure Environment:**
+
    - Copy `.env.example` to `.env`
    - Update Azure AD and API configuration
 
 3. **Start Development Server:**
+
    ```bash
    npm start
    ```
@@ -196,15 +256,19 @@ REACT_APP_API_URL=http://localhost:5000
 ## Available Scripts
 
 ### `npm start`
+
 Runs the app in development mode at [http://localhost:3000](http://localhost:3000)
 
 ### `npm test`
+
 Launches the test runner in interactive watch mode
 
 ### `npm run build`
+
 Builds the app for production to the `build` folder
 
 ### `npm run eject`
+
 **Note: this is a one-way operation!** Ejects from Create React App configuration
 
 ## State Management
@@ -225,12 +289,14 @@ The application uses Redux Toolkit with RTK Query for state management:
 ## Dependencies
 
 ### Core Dependencies:
+
 - React 18+ with TypeScript
 - Redux Toolkit & RTK Query
 - React Router DOM
 - Microsoft MSAL (Browser & React)
 
 ### Development Dependencies:
+
 - TypeScript
 - ESLint
 - React Scripts
@@ -251,6 +317,7 @@ The application uses Redux Toolkit with RTK Query for state management:
 4. **Azure AD Issues:** Verify client ID and tenant configuration
 
 ### Debug Mode:
+
 Enable Redux DevTools in development for state inspection.
 
 ## Contributing

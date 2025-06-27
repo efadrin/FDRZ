@@ -7,14 +7,22 @@ export interface User {
   department?: string;
 }
 
-// Login response from authentication API
+// FDRW Login response from authentication API
 export interface LoginResponse {
-  user: User;
-  token: string;
-  refreshToken?: string;
+  message: string;
+  statusCode: number;
+  succeeded: boolean;
+  data: {
+    sessionToken: string;
+  };
 }
 
-// Microsoft login request interface
+// FDRW Authentication request (using Microsoft Graph token)
+export interface AuthRequest {
+  token: string;
+}
+
+// Microsoft login request interface (for internal use)
 export interface MicrosoftLoginRequest {
   email: string;
   name: string;
