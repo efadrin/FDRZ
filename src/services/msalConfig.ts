@@ -14,6 +14,6 @@ export const msalConfig: Configuration = {
 };
 
 // Login request configuration
-export const loginRequest: PopupRequest = {
-  scopes: ['User.Read'],
+export const loginRequest = {
+  scopes: [`api://${process.env.REACT_APP_AZURE_CLIENT_ID}/user_impersonation`],
 };

@@ -4,7 +4,7 @@ import { MsalProvider, useMsal } from '@azure/msal-react';
 import { msalConfig, loginRequest } from '../services/msalConfig';
 import { useAppDispatch } from '../store/hooks';
 import { setUser, setToken, setMsalAccount, logout as logoutAction, setError, setLoading } from '../store/slices/authSlice';
-import { useMicrosoftLoginMutation } from '../store/api/authApi';
+import { useLoginMutation } from '../store/api/authApi';
 
 interface AuthContextType {
   login: () => Promise<void>;
@@ -19,7 +19,7 @@ const msalInstance = new PublicClientApplication(msalConfig);
 // Inner component that uses MSAL hooks
 const AuthProviderInner: React.FC<{ children: React.ReactNode }> = ({ children }) => {  const { instance, accounts } = useMsal();
   const dispatch = useAppDispatch();
-  const [microsoftLogin] = useMicrosoftLoginMutation();
+  const [microsoftLogin] = useLoginMutation();
   useEffect(() => {
     // Initialize auth state from stored token
     const token = localStorage.getItem('authToken');
@@ -42,12 +42,9 @@ const AuthProviderInner: React.FC<{ children: React.ReactNode }> = ({ children }
       dispatch(setLoading(true));
       
       const loginResponse = await instance.loginPopup(loginRequest);
-      
       if (loginResponse && loginResponse.account) {
         const result = await microsoftLogin({
-          email: loginResponse.account.username || '',
-          name: loginResponse.account.name || '',
-          microsoftId: loginResponse.account.homeAccountId,        accessToken: loginResponse.accessToken,
+          Token: loginResponse.accessToken
         }).unwrap();
         
         dispatch(setUser(result.user));
@@ -79,10 +76,8 @@ const AuthProviderInner: React.FC<{ children: React.ReactNode }> = ({ children }
       
       if (loginResponse && loginResponse.account) {
         const result = await microsoftLogin({
-          email: loginResponse.account.username || '',
-          name: loginResponse.account.name || '',
-          microsoftId: loginResponse.account.homeAccountId,
-          accessToken: loginResponse.accessToken,        }).unwrap();
+          Token: loginResponse.accessToken,       
+        }).unwrap();
         
         dispatch(setUser(result.user));
         dispatch(setToken(result.token));
