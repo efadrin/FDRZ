@@ -24,8 +24,7 @@ export interface MicrosoftLoginRequest {
 
 // Standard login request interface
 export interface LoginRequest {
-  email: string;
-  password: string;
+  Token: string;
 }
 
 // Token validation response
