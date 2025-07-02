@@ -14,7 +14,7 @@ import './App.css';
 function App() {
   return (
     <Provider store={store}>
-      <Router>
+      <Router basename="/fdrz">
         <AuthProvider>
           <Routes>
             <Route path="/login" element={<LoginPage />} />

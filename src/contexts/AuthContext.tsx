@@ -47,8 +47,7 @@ const AuthProviderInner: React.FC<{ children: React.ReactNode }> = ({ children }
           Token: loginResponse.accessToken
         }).unwrap();
         
-        dispatch(setUser(result.user));
-        dispatch(setToken(result.token));
+        dispatch(setToken(result.SessionToken));
       }
     } catch (error: any) {
       const errorMessage = error?.data?.message || 'Login failed. Please try again.';
@@ -79,8 +78,7 @@ const AuthProviderInner: React.FC<{ children: React.ReactNode }> = ({ children }
           Token: loginResponse.accessToken,       
         }).unwrap();
         
-        dispatch(setUser(result.user));
-        dispatch(setToken(result.token));
+        dispatch(setToken(result.SessionToken));
       }
     } catch (error) {
       // Fall back to interactive login
