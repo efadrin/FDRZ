@@ -1,138 +1,149 @@
-.login-page {
+.login-wrapper {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   min-height: 100vh;
   display: flex;
-  align-items: center;
+  flex-direction: column;
   justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  align-items: center;
   padding: 1rem;
+  font-family: 'Inter', sans-serif;
 }
 
-.login-container {
+.login-card {
   background: white;
-  border-radius: 12px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-  padding: 3rem;
+  padding: 2rem;
+  border-radius: 16px;
   width: 100%;
   max-width: 400px;
   text-align: center;
-}
-
-.login-logo {
-  font-size: 2.5rem;
-  font-weight: bold;
-  color: #667eea;
-  margin-bottom: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .login-title {
-  font-size: 1.5rem;
-  color: #333;
-  margin-bottom: 0.5rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 0.25rem;
 }
 
 .login-subtitle {
-  color: #666;
-  margin-bottom: 2rem;
-  font-size: 0.95rem;
+  color: #6b7280;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
 }
 
 .login-button {
   width: 100%;
-  padding: 0.875rem 1.5rem;
-  font-size: 1rem;
+  padding: 0.75rem;
+  font-size: 0.95rem;
   font-weight: 600;
   color: white;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(to right, #667eea, #764ba2);
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition: all 0.3s ease;
   margin-bottom: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  transition: all 0.2s;
 }
 
 .login-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
-}
-
-.login-button:active {
-  transform: translateY(0);
+  opacity: 0.95;
 }
 
 .login-button:disabled {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
+}
+
+.login-button.secondary {
+  background: #f3f4f6;
+  color: #111827;
+  border: 1px solid #d1d5db;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #999;
+  font-size: 0.8rem;
+  margin: 1.5rem 0 1rem;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #e5e7eb;
 }
 
 .login-error {
-  background-color: #fee;
-  border: 1px solid #fcc;
-  color: #c33;
-  padding: 0.875rem;
-  border-radius: 6px;
+  background: #fee2e2;
+  color: #b91c1c;
+  padding: 0.75rem;
+  border-radius: 8px;
   margin-bottom: 1rem;
-  font-size: 0.9rem;
-}
-
-.login-loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  color: #666;
-  font-size: 0.9rem;
-  margin-top: 1rem;
-}
-
-.login-spinner {
-  width: 20px;
-  height: 20px;
-  border: 2px solid #e9ecef;
-  border-top: 2px solid #667eea;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  font-size: 0.85rem;
 }
 
 .login-footer {
   margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid #eee;
-  color: #888;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
+  color: #f3f4f6; /* đổi từ xám sang trắng mờ */
+  text-align: center;
+  background: rgba(0, 0, 0, 0.1); /* nền mờ nhẹ giúp chữ nổi bật */
+  padding: 1rem;
+  border-radius: 8px;
 }
 
 .login-footer a {
-  color: #667eea;
-  text-decoration: none;
-}
-
-.login-footer a:hover {
+  font-weight: 600;
+  color: #ffffff; /* trắng đậm hơn */
   text-decoration: underline;
 }
 
-/* Responsive design */
-@media (max-width: 480px) {
-  .login-container {
-    padding: 2rem 1.5rem;
-    margin: 1rem;
-  }
-  
-  .login-logo {
-    font-size: 2rem;
-  }
-  
-  .login-title {
-    font-size: 1.25rem;
-  }
+.login-footer a:hover {
+  color: #e0e7ff; /* nhẹ hơn chút khi hover */
+}
+
+.secured-text {
+  font-size: 0.8rem;
+  color: #e5e7eb; /* sáng hơn so với xám mặc định */
+  margin-top: 0.5rem;
+}
+
+
+.manual-form {
+  margin-top: 1rem;
+  text-align: left;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-size: 0.85rem;
+  color: #374151;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.65rem;
+  font-size: 0.95rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  outline: none;
+  background: #fff;
+}
+
+.form-group input:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
 }
