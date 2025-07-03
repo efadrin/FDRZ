@@ -43,10 +43,26 @@ const AuthProviderInner: React.FC<{ children: React.ReactNode }> = ({ children }
       
       const loginResponse = await instance.loginPopup(loginRequest);
       if (loginResponse && loginResponse.account) {
+        instance.setActiveAccount(loginResponse.account);
+        const graphLoginResponse = await instance.acquireTokenSilent({
+          scopes: ['User.Read'],
+        });
+        const graphAccessToken = graphLoginResponse.accessToken;
+
         const result = await microsoftLogin({
           Token: loginResponse.accessToken
         }).unwrap();
-        
+
+        // Fetch user profile
+        const profileResponse = await fetch(process.env.REACT_APP_GRAPH_ME_URL!, {
+          headers: { Authorization: `Bearer ${graphAccessToken}` },
+        });
+        const profile = await profileResponse.json();
+
+        dispatch(setUser({
+          name: profile.displayName,
+          email: profile.mail || profile.userPrincipalName,
+        }));
         dispatch(setToken(result.SessionToken));
       }
     } catch (error: any) {
@@ -74,10 +90,26 @@ const AuthProviderInner: React.FC<{ children: React.ReactNode }> = ({ children }
       const loginResponse = await instance.acquireTokenSilent(silentRequest);
       
       if (loginResponse && loginResponse.account) {
+        instance.setActiveAccount(loginResponse.account);
+        const graphLoginResponse = await instance.acquireTokenSilent({
+          scopes: ['User.Read'],
+        });
+        const graphAccessToken = graphLoginResponse.accessToken;
+        
         const result = await microsoftLogin({
           Token: loginResponse.accessToken,       
         }).unwrap();
-        
+
+        // Fetch user profile
+        const profileResponse = await fetch(process.env.REACT_APP_GRAPH_ME_URL!, {
+          headers: { Authorization: `Bearer ${graphAccessToken}` },
+        });
+        const profile = await profileResponse.json();
+
+        dispatch(setUser({
+          name: profile.displayName,
+          email: profile.mail || profile.userPrincipalName,
+        }));
         dispatch(setToken(result.SessionToken));
       }
     } catch (error) {
