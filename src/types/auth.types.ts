@@ -9,9 +9,7 @@ export interface User {
 
 // Login response from authentication API
 export interface LoginResponse {
-  user: User;
-  token: string;
-  refreshToken?: string;
+  SessionToken: string;
 }
 
 // Microsoft login request interface
